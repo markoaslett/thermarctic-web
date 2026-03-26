@@ -668,8 +668,35 @@ section {
 .stat-comparison:hover::before { transform: scaleY(1); }
 .stat-comparison:hover { border-color: var(--border2); background: var(--surface2); }
 
-.stat-comparison-winner {
+/* Competitor left: flex-1 fills space, left-aligned, dim */
+.stat-comparison-competitor {
   flex: 1;
+}
+.stat-comparison-competitor .cmp-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.stat-comparison-competitor .cmp-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;        /* ~60% of 26px winner */
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1;
+}
+.stat-comparison-competitor .cmp-value span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  margin-left: 2px;
+}
+
+/* Winner right: no flex-1, right-aligned, bright */
+.stat-comparison-winner {
+  text-align: right;
 }
 .stat-comparison-winner .cmp-brand {
   font-family: 'JetBrains Mono', monospace;
@@ -701,31 +728,24 @@ section {
   color: var(--muted);
   text-transform: uppercase;
   padding: 0 16px;
+  flex-shrink: 0;
 }
 
-.stat-comparison-competitor {
-  text-align: right;
+/* ── Dual-value accuracy row (alt left dim, primary right bright) ── */
+.stat-dual-value {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
 }
-.stat-comparison-competitor .cmp-brand {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.stat-comparison-competitor .cmp-value {
+.stat-value-alt {
   font-family: 'Orbitron', monospace;
-  font-size: 16px;
+  font-size: 13px;        /* ~60% of 22px primary */
   font-weight: 400;
   color: var(--muted);
   line-height: 1;
 }
-.stat-comparison-competitor .cmp-value span {
-  font-family: 'JetBrains Mono', monospace;
+.stat-value-alt .stat-unit {
   font-size: 9px;
-  color: var(--muted);
-  margin-left: 2px;
 }
 
 /* ── Technology section ── */
@@ -900,7 +920,7 @@ section {
 /* ── Products section ── */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 2px;
   margin-top: 72px;
 }
@@ -936,6 +956,63 @@ section {
 .product-card.featured::after {
   transform: translateX(0);
   opacity: 0.5;
+}
+
+/* ── Finnish Forge hardware reveal card ── */
+.product-card.has-image {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  padding: 0;
+  min-height: 400px;
+}
+
+/* Freeze the card bg on hover so specs side doesn't flash */
+.product-card.has-image:hover { background: var(--surface); }
+
+.product-img-side {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px 0 0 2px;
+}
+
+.product-img-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.product-card.has-image:hover .product-img-side img {
+  transform: scale(1.04);
+}
+
+/* Cyan glow border — inset overlay, not clipped by overflow:hidden */
+.product-img-side::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow:
+    inset 0 0 0 1px rgba(47,196,224,0.25),
+    inset 0 0 60px rgba(47,196,224,0.07);
+  pointer-events: none;
+  z-index: 1;
+  transition: box-shadow 0.5s ease;
+}
+
+.product-card.has-image:hover .product-img-side::before {
+  box-shadow:
+    inset 0 0 0 1px rgba(47,196,224,0.5),
+    inset 0 0 90px rgba(47,196,224,0.15);
+}
+
+.product-specs-side {
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .product-tier {
@@ -1216,6 +1293,8 @@ footer {
   .philosophy-grid,
   .tech-grid { grid-template-columns: 1fr; gap: 48px; }
   .products-grid { grid-template-columns: 1fr; }
+  .product-card.has-image { grid-template-columns: 1fr; min-height: auto; }
+  .product-img-side { height: 260px; border-radius: 2px 2px 0 0; }
   .hero { padding: 100px 24px 0; }
   .disclaimer { padding: 28px 24px; margin: 0 24px; }
   footer { padding: 32px 24px; flex-direction: column; gap: 16px; text-align: center; }
@@ -1316,9 +1395,9 @@ footer {
         </div>
         <div class="stat-row reveal">
           <span class="stat-label">Temp Accuracy</span>
-          <div>
-            <span class="stat-value">±0.5</span><span class="stat-unit">°C</span>
-            <span class="stat-unit stat-unit-dim"> / ±0.9°F</span>
+          <div class="stat-dual-value">
+            <div class="stat-value-alt">±0.5<span class="stat-unit">°C</span></div>
+            <div><span class="stat-value">±0.9</span><span class="stat-unit">°F</span></div>
           </div>
         </div>
       </div>
@@ -1332,14 +1411,14 @@ footer {
         </div>
         <div class="stat-speed-tag reveal">2x Faster Delivery</div>
         <div class="stat-comparison reveal">
-          <div class="stat-comparison-winner">
-            <div class="cmp-brand">Thermarctic</div>
-            <div class="cmp-value">2.5 <span>Months</span></div>
-          </div>
-          <div class="stat-comparison-vs">vs.</div>
           <div class="stat-comparison-competitor">
             <div class="cmp-brand">Industry Avg.</div>
             <div class="cmp-value">5–7 <span>Months</span></div>
+          </div>
+          <div class="stat-comparison-vs">vs.</div>
+          <div class="stat-comparison-winner">
+            <div class="cmp-brand">Thermarctic</div>
+            <div class="cmp-value">2.5 <span>Months</span></div>
           </div>
         </div>
       </div>
@@ -1478,52 +1557,67 @@ footer {
 
   <div class="products-grid">
 
-    <div class="product-card reveal">
-      <div class="product-tier">Tier I — Entry</div>
-      <div class="product-name">FINNISH FORGE</div>
-      <div class="product-tagline">The purist's choice</div>
-      <div class="product-price">$19,900</div>
-      <div class="product-price-sub">Fully installed · No add-on fees</div>
-      <ul class="product-features">
-        <li>2–3 person capacity</li>
-        <li>Wood, stone &amp; steel construction</li>
-        <li>Wood stove or electric heater</li>
-        <li>Thermarctic unit controller</li>
-        <li>HOA &amp; permit handling</li>
-        <li>1-day installation</li>
-      </ul>
+    <div class="product-card has-image reveal">
+      <div class="product-img-side">
+        <img src="assets/finnish-forge.png" alt="Finnish Forge — Tier I Precision Sauna System" loading="lazy">
+      </div>
+      <div class="product-specs-side">
+        <div class="product-tier">Tier I — Entry</div>
+        <div class="product-name">FINNISH FORGE</div>
+        <div class="product-tagline">The purist's choice</div>
+        <div class="product-price">$19,900</div>
+        <div class="product-price-sub">Fully installed · No add-on fees</div>
+        <ul class="product-features">
+          <li>2–3 person capacity</li>
+          <li>Wood, stone &amp; steel construction</li>
+          <li>Wood stove or electric heater</li>
+          <li>Thermarctic unit controller</li>
+          <li>HOA &amp; permit handling</li>
+          <li>1-day installation</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="product-card featured reveal">
-      <div class="product-tier">Tier II — Signature</div>
-      <div class="product-name">SCANDINAVIAN SUMMIT</div>
-      <div class="product-tagline">The flagship experience</div>
-      <div class="product-price">$25,000</div>
-      <div class="product-price-sub">Fully installed · No add-on fees</div>
-      <ul class="product-features">
-        <li>3–4 person capacity</li>
-        <li>Smart film glass + app integration</li>
-        <li>Glass, tile, steel &amp; wood</li>
-        <li>Native HomeKit / Google Home</li>
-        <li>HOA &amp; permit handling</li>
-        <li>Future-proofed electrical</li>
-      </ul>
+    <div class="product-card has-image featured reveal">
+      <div class="product-img-side">
+        <img src="assets/scandinavian-summit.png" alt="Scandinavian Summit — Tier II Signature Sauna System" loading="lazy">
+      </div>
+      <div class="product-specs-side">
+        <div class="product-tier">Tier II — Signature</div>
+        <div class="product-name">SCANDINAVIAN SUMMIT</div>
+        <div class="product-tagline">The flagship experience</div>
+        <div class="product-price">$25,000</div>
+        <div class="product-price-sub">Fully installed · No add-on fees</div>
+        <ul class="product-features">
+          <li>3–4 person capacity</li>
+          <li>Smart film glass + app integration</li>
+          <li>Glass, tile, steel &amp; wood</li>
+          <li>Native HomeKit / Google Home</li>
+          <li>HOA &amp; permit handling</li>
+          <li>Future-proofed electrical</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="product-card reveal">
-      <div class="product-tier">Tier III — Bespoke</div>
-      <div class="product-name">BALTIC BASTION</div>
-      <div class="product-tagline">Fully customized</div>
-      <div class="product-price">$40,000</div>
-      <div class="product-price-sub">Fully installed · No add-on fees</div>
-      <ul class="product-features">
-        <li>5-person capacity</li>
-        <li>Accoya wood · Marine stainless</li>
-        <li>Architectural LED system</li>
-        <li>Premium audio integration</li>
-        <li>Highest customization level</li>
-        <li>White-glove installation</li>
-      </ul>
+    <div class="product-card has-image reveal">
+      <div class="product-img-side">
+        <img src="assets/baltic-bastion.png" alt="Baltic Bastion — Tier III Bespoke Sauna System" loading="lazy">
+      </div>
+      <div class="product-specs-side">
+        <div class="product-tier">Tier III — Bespoke</div>
+        <div class="product-name">BALTIC BASTION</div>
+        <div class="product-tagline">Fully customized</div>
+        <div class="product-price">$40,000</div>
+        <div class="product-price-sub">Fully installed · No add-on fees</div>
+        <ul class="product-features">
+          <li>5-person capacity</li>
+          <li>Accoya wood · Marine stainless</li>
+          <li>Architectural LED system</li>
+          <li>Premium audio integration</li>
+          <li>Highest customization level</li>
+          <li>White-glove installation</li>
+        </ul>
+      </div>
     </div>
 
   </div>
