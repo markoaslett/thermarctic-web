@@ -1026,6 +1026,64 @@ footer {
   transform: translateY(0);
 }
 
+/* ── Mobile hero fixes ── */
+@media (max-width: 768px) {
+  /* Fluid wordmark — no fixed floor, scales down smoothly to fit one line */
+  .hero-wordmark {
+    font-size: clamp(28px, 9vw, 52px);
+    letter-spacing: 0.04em;
+  }
+
+  /* Tighter glow spreads so heat and ice stay distinct at small sizes */
+  .hero-wordmark .therm {
+    animation: fadeUp 1s ease 0.5s forwards, heatShimmerMobile 3s ease-in-out 1.5s infinite;
+  }
+  .hero-wordmark .arctic {
+    animation: frostShimmerMobile 3.5s ease-in-out 1.5s infinite;
+  }
+
+  @keyframes heatShimmerMobile {
+    0%, 100% {
+      text-shadow:
+        0 0  8px rgba(255,140,0,0.8),
+        0 0 18px rgba(255,100,0,0.45),
+        0 0 32px rgba(255,60,0,0.18);
+    }
+    50% {
+      text-shadow:
+        0 0 12px rgba(255,160,0,0.95),
+        0 0 26px rgba(255,120,0,0.6),
+        0 0 44px rgba(255,60,0,0.24);
+    }
+  }
+
+  @keyframes frostShimmerMobile {
+    0%, 100% {
+      text-shadow:
+        0 0  4px rgba(200,255,255,1),
+        0 0 12px rgba(0,255,255,0.85),
+        0 0 22px rgba(0,220,255,0.45),
+        1px 1px 2px rgba(255,255,255,0.3);
+    }
+    50% {
+      text-shadow:
+        0 0  6px rgba(220,255,255,1),
+        0 0 18px rgba(0,255,255,1),
+        0 0 32px rgba(0,230,255,0.55),
+        1px 1px 2px rgba(255,255,255,0.45);
+    }
+  }
+
+  /* Stack CTA buttons vertically, full width */
+  .hero-cta-group {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 320px;
+  }
+  .btn-primary, .btn-ghost { text-align: center; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   nav { padding: 16px 24px; }
