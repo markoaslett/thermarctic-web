@@ -533,7 +533,7 @@ section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
-  align-items: start;
+  align-items: center;
   margin-top: 80px;
 }
 
@@ -555,6 +555,9 @@ section {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  padding: 24px;
 }
 
 .stat-row {
@@ -603,6 +606,126 @@ section {
   font-size: 10px;
   color: var(--muted);
   margin-left: 4px;
+}
+
+/* ── Stat group labels — unified orange style across all three headers ── */
+.stat-group + .stat-group { margin-top: 24px; }
+
+.stat-group-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: var(--orange);
+  text-transform: uppercase;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+
+/* ── Speed tag — same style as group label, no box ── */
+.stat-speed-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: var(--orange);
+  text-transform: uppercase;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-top: 24px;
+  margin-bottom: 2px;
+}
+
+/* ── Secondary unit (°F) dimmer than primary (°C) ── */
+.stat-unit-dim {
+  color: var(--muted);
+  opacity: 0.55;
+}
+
+/* ── Head-to-head comparison row ── */
+.stat-comparison {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease, opacity 0.8s ease, transform 0.8s ease;
+  margin-top: 2px;
+}
+
+.stat-comparison::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--cyan);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+.stat-comparison:hover::before { transform: scaleY(1); }
+.stat-comparison:hover { border-color: var(--border2); background: var(--surface2); }
+
+.stat-comparison-winner {
+  flex: 1;
+}
+.stat-comparison-winner .cmp-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.stat-comparison-winner .cmp-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+}
+.stat-comparison-winner .cmp-value span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.stat-comparison-vs {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+  padding: 0 16px;
+}
+
+.stat-comparison-competitor {
+  text-align: right;
+}
+.stat-comparison-competitor .cmp-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.stat-comparison-competitor .cmp-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1;
+}
+.stat-comparison-competitor .cmp-value span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  margin-left: 2px;
 }
 
 /* ── Technology section ── */
@@ -1179,30 +1302,48 @@ footer {
     </div>
 
     <div class="philosophy-stats">
-      <div class="stat-row reveal">
-        <span class="stat-label">Target Sauna Temp</span>
-        <div><span class="stat-value">185</span><span class="stat-unit">°F</span></div>
+
+      <!-- Group 1: Technical Specifications -->
+      <div class="stat-group">
+        <div class="stat-group-label reveal">Technical Specifications</div>
+        <div class="stat-row reveal">
+          <span class="stat-label">Target Sauna Temp</span>
+          <div><span class="stat-value">185</span><span class="stat-unit">°F</span></div>
+        </div>
+        <div class="stat-row reveal">
+          <span class="stat-label">Target Plunge Temp</span>
+          <div><span class="stat-value">50</span><span class="stat-unit">°F</span></div>
+        </div>
+        <div class="stat-row reveal">
+          <span class="stat-label">Temp Accuracy</span>
+          <div>
+            <span class="stat-value">±0.5</span><span class="stat-unit">°C</span>
+            <span class="stat-unit stat-unit-dim"> / ±0.9°F</span>
+          </div>
+        </div>
       </div>
-      <div class="stat-row reveal">
-        <span class="stat-label">Target Plunge Temp</span>
-        <div><span class="stat-value">50</span><span class="stat-unit">°F</span></div>
+
+      <!-- Group 2: Deployment Efficiency -->
+      <div class="stat-group">
+        <div class="stat-group-label reveal">Deployment Efficiency</div>
+        <div class="stat-row reveal">
+          <span class="stat-label">Avg. Install Time</span>
+          <div><span class="stat-value">1</span><span class="stat-unit">Day</span></div>
+        </div>
+        <div class="stat-speed-tag reveal">2x Faster Delivery</div>
+        <div class="stat-comparison reveal">
+          <div class="stat-comparison-winner">
+            <div class="cmp-brand">Thermarctic</div>
+            <div class="cmp-value">2.5 <span>Months</span></div>
+          </div>
+          <div class="stat-comparison-vs">vs.</div>
+          <div class="stat-comparison-competitor">
+            <div class="cmp-brand">Industry Avg.</div>
+            <div class="cmp-value">5–7 <span>Months</span></div>
+          </div>
+        </div>
       </div>
-      <div class="stat-row reveal">
-        <span class="stat-label">Temp Accuracy</span>
-        <div><span class="stat-value">±0.5</span><span class="stat-unit">°C</span></div>
-      </div>
-      <div class="stat-row reveal">
-        <span class="stat-label">Avg. Install Time</span>
-        <div><span class="stat-value">1</span><span class="stat-unit">Day</span></div>
-      </div>
-      <div class="stat-row reveal">
-        <span class="stat-label">Competitor Turnaround</span>
-        <div><span class="stat-value">5–7</span><span class="stat-unit">Months</span></div>
-      </div>
-      <div class="stat-row reveal">
-        <span class="stat-label">Thermarctic Turnaround</span>
-        <div><span class="stat-value">2.5</span><span class="stat-unit">Months</span></div>
-      </div>
+
     </div>
   </div>
 </section>
@@ -1397,9 +1538,10 @@ footer {
   <p class="disclaimer-body">
     <strong>Thermarctic Wellness Systems is currently in active R&amp;D and pre-launch development.</strong>
     We are not yet operational or accepting public orders. All specifications, pricing, and product tiers shown
-    on this page represent our design intent and are subject to change. Our proprietary unit controller is in
-    functional prototype stage, currently running on development hardware at our Broomfield, Colorado base of
-    operations. <strong>If you are a potential distribution partner, supplier, or investor interested in the
+    on this page represent our design intent and are subject to change. Our proprietary unit controller is currently
+    in <strong>Phase 1 Prototype testing on ARM-based development hardware</strong> at our Las Vegas, NV R&amp;D Lab.
+    <strong>Future Operations:</strong> Strategic relocation to the Broomfield/Boulder, CO aerospace corridor planned for 2028.
+    <strong>If you are a potential distribution partner, supplier, or investor interested in the
     Front Range wellness market, we welcome your inquiry.</strong> Expected operational launch is tied to
     completion of our founding member installation series in the greater Boulder–Denver corridor.
   </p>
@@ -1413,9 +1555,9 @@ footer {
     <p class="contact-intro">Thermarctic is selectively engaging distribution partners, suppliers, and investors in the Front Range wellness market ahead of our operational launch.</p>
     <a href="mailto:hello@thermarctic.com" class="contact-email">hello@thermarctic.com</a>
     <div class="contact-meta">
-      <span>Broomfield, CO</span>
+      <span>Developed in Las Vegas, NV</span>
       <span class="contact-sep">·</span>
-      <span>Greater Boulder–Denver Corridor</span>
+      <span>Future Site: Broomfield, CO</span>
     </div>
   </div>
 </section>
@@ -1423,7 +1565,7 @@ footer {
 <!-- Footer -->
 <footer>
   <div class="footer-logo">THERMARCTIC</div>
-  <div class="footer-copy">© 2026 Thermarctic Wellness Systems LLC · Broomfield, CO</div>
+  <div class="footer-copy">© 2026 Thermarctic Wellness Systems LLC · Las Vegas, NV</div>
   <div class="footer-domain">thermarctic.com</div>
 </footer>
 
